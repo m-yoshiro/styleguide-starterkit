@@ -10,9 +10,11 @@
 
 const gulp = require('gulp');
 const shell = require('gulp-shell');
+const gutil = require('gulp-util');
+const sass = require('gulp-sass');
 const postcss = require('gulp-postcss');
 const sourcemaps = require('gulp-sourcemaps');
-const scss = require('postcss-scss');
+const reporter = require('postcss-reporter');
 const autoprefixer = require('autoprefixer');
 const cssnano = require('cssnano');
 
@@ -33,21 +35,18 @@ gulp.task('styles', () => {
     browsers: ['last 1 version'],
   };
 
-  const POSTCSS_CONFIG = {
-    plugins: [
-      AUTOPREFIXER_CONFIG,
-      cssnano(),
-    ],
-    options: {
-      parser: scss,
-    }
-  };
+  const POSTCSS_PLUGINS = [
+    autoprefixer(AUTOPREFIXER_CONFIG),
+    cssnano(),
+    reporter({ throwError: true }),
+  ];
 
-  return gulp.src(`${PATHS.src}/source/css/**/*.scss`)
+  return gulp.src(`${PATHS.src}/stylesheets/**/*.scss`)
     .pipe(sourcemaps.init())
-    .pipe(postcss(POSTCSS_CONFIG))
+    .pipe(sass().on('error', sass.logError))
+    .pipe(postcss(POSTCSS_PLUGINS))
     .pipe(sourcemaps.write())
-    .pipe(gulp.dest(`${PATHS.dist}/css/style.css`));
+    .pipe(gulp.dest(`${PATHS.dist}/css/`));
 });
 
 // Pattern Lab

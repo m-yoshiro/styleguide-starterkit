@@ -53,5 +53,5 @@ gulp.task('styles', () => {
 //
 
 gulp.task('server:patternlab', shell.task([
-  'php core/console --server --watch'
+  'php core/console --server  --with-watch'
 ]));

@@ -1,0 +1,3 @@
+@mixin font-size($key, $font-sizes) {
+  font-size: to-rem($font-size);
+}

@@ -1,0 +1,35 @@
+// Key Colors
+//
+
+$key-colors: (
+  black: #333,
+  white: #fff,
+);
+
+// Helper function
+//
+
+@function color($key, $pallet:null) {
+  @if $pallet == null {
+    @if not type-of($pallet) == map {
+      @warn "argument `$pallet` of `color()` must be map";
+    }
+    $pallet: $key-colors;
+  }
+
+  @return map-get($pallet, $key);
+}
+
+// Type
+//
+
+$color__body-copy: color(black) !default;
+$color__link-gray: #6D6D6D !default;
+
+// UI
+//
+
+$color__body-background: color(white) !default;
+$color__header-background: color(white) !default;
+$color__header-border: #D9D9D9 !default;
+$color__button-primary: #D9D9D9 !default;

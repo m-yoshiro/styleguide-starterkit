@@ -1,0 +1,9 @@
+@function to-rem($font-size, $base-size: 16) {
+  @if not unit($font-size) == px {
+    @warn "argument `$font-size` of `to-rem()` must has `px` unit";
+  }
+  @if not unit($base-size) == px {
+    @warn "argument `$base-size` of `to-rem()` must has `px` unit";
+  }
+  @return (unitless($font-size) / unitless($base-size))rem;
+}

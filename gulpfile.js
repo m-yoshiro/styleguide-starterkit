@@ -14,6 +14,7 @@ const gutil = require('gulp-util');
 const sass = require('gulp-sass');
 const postcss = require('gulp-postcss');
 const sourcemaps = require('gulp-sourcemaps');
+const stylelint = require('gulp-stylelint');
 const reporter = require('postcss-reporter');
 const autoprefixer = require('autoprefixer');
 const cssnano = require('cssnano');
@@ -30,7 +31,7 @@ const PATHS = {
 // Stylesheets
 //
 
-gulp.task('styles', () => {
+gulp.task('styles', ['lint:styles'], () => {
 
   const AUTOPREFIXER_CONFIG = {
     browsers: ['last 1 version'],
@@ -39,7 +40,7 @@ gulp.task('styles', () => {
   const POSTCSS_PLUGINS = [
     autoprefixer(AUTOPREFIXER_CONFIG),
     cssnano(),
-    reporter({ throwError: true }),
+    reporter(),
   ];
 
   return gulp.src(`${PATHS.src}/stylesheets/**/*.scss`)
@@ -49,6 +50,13 @@ gulp.task('styles', () => {
     .pipe(sourcemaps.write())
     .pipe(gulp.dest(`${PATHS.dist}/css/`))
     .pipe(browserSync.reload({ stream: true }));
+});
+
+gulp.task('lint:styles', () => {
+  return gulp.src(`${PATHS.src}/stylesheets/**/*.scss`)
+    .pipe(stylelint({
+      reporters: [{ formatter: 'string', console: true }],
+    }));
 });
 
 // Pattern Lab

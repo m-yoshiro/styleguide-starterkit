@@ -12,7 +12,7 @@ $key-colors: (
 @function color($key, $pallet:null) {
   @if $pallet == null {
     @if not type-of($pallet) == map {
-      @warn "argument `$pallet` of `color()` must be map";
+      @warn "argument `$pallet` of `color()` must be a map";
     }
     $pallet: $key-colors;
   }

@@ -63,7 +63,7 @@ gulp.task('lint:styles', () => {
 //
 
 gulp.task('watch:patternlab', shell.task([
-  'php core/console --watch --patternsonly'
+  'php core/console --watch'
 ]));
 
 
@@ -75,10 +75,8 @@ gulp.task('browserSync-reload', () => {
 });
 
 gulp.task('browserSync', () => {
-  connect.server({}, () => {
-    browserSync.init({
-      server: './public'
-    });
+  browserSync.init({
+    server: './public'
   });
 });
 

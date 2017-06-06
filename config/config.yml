@@ -5,6 +5,7 @@ ie:
     - less
     - scss
 id:
+    - stylesheets
     - scss
     - .svn
     - .sass-cache

@@ -4,9 +4,11 @@ ie:
     - DS_Store
     - less
     - scss
+    - tests.js
 id:
     - stylesheets
     - scss
+    - tests
     - .svn
     - .sass-cache
 cleanPublic: 'true'

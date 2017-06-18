@@ -95,20 +95,28 @@ gulp.task('watch', ['styles', 'watch:patternlab', 'browserSync'], () => {
 // Tests
 //
 
-gulp.task('visual-regrresion:ref', () => {
+let CONFIG = require('./tests/visual-regression/backstop.config.js')();
 
-  let CONFIG = require('./tests/visual-regression/backstop.config.js')();
+function setupBackstopjs(cb) {
   let scenarios = [];
 
   return gulp.src(`${PATHS.src}/**/*.tests.json`)
-    .on('data', (file) => {
-      const unitConfig = JSON.parse(fs.readFileSync(file.path));
-      if(Array.isArray(unitConfig.scenarios) ) {
-        scenarios = scenarios.concat(unitConfig.scenarios);
-      }
-    })
-    .on('end', () => {
-      CONFIG.scenarios = scenarios;
-      backstopjs('reference', { config: CONFIG });
-    });
+  .on('data', (file) => {
+    const unitConfig = JSON.parse(fs.readFileSync(file.path));
+    if(Array.isArray(unitConfig.scenarios) ) {
+      scenarios = scenarios.concat(unitConfig.scenarios);
+    }
+  })
+  .on('end', () => {
+    CONFIG.scenarios = scenarios;
+    if (cb) cb();
+  });
+}
+
+gulp.task('visual-regrresion:ref', () => {
+  return setupBackstopjs(() => backstopjs('reference', { config: CONFIG }));
+});
+
+gulp.task('visual-regrresion:test', () => {
+  return setupBackstopjs(() => backstopjs('test', { config: CONFIG }));
 });

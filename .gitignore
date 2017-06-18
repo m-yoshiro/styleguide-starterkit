@@ -4,3 +4,4 @@ public/*
 source/styleguide/*
 vendor/*
 node_modules/*
+tests/visual-regression/html_report

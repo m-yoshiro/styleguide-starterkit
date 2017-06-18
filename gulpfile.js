@@ -5,6 +5,7 @@
   - Config
   - Stylesheets
   - Pattern lab
+  - Tests
 
   ========================= */
 
@@ -19,6 +20,9 @@ const reporter = require('postcss-reporter');
 const autoprefixer = require('autoprefixer');
 const cssnano = require('cssnano');
 const browserSync = require('browser-sync').create();
+const fs = require('fs');
+const path = require('path');
+// const backstop = require('backstopjs');
 
 // Config
 //
@@ -86,4 +90,25 @@ gulp.task('browserSync', () => {
 gulp.task('watch', ['styles', 'watch:patternlab', 'browserSync'], () => {
   gulp.watch(`${PATHS.src}/_patterns`, ['browserSync-reload']);
   gulp.watch(`${PATHS.src}/stylesheets`, ['styles']);
+});
+
+// Tests
+//
+
+gulp.task('visual-regrresion:ref', () => {
+
+  let CONFIG = require('./tests/visual-regression/backstop.config.js')();
+  let scenarios = [];
+
+  return gulp.src(`${PATHS.src}/**/*.tests.json`)
+    .on('data', (file) => {
+      const unitConfig = JSON.parse(fs.readFileSync(file.path));
+      if(Array.isArray(unitConfig.scenarios) ) {
+        scenarios = scenarios.concat(unitConfig.scenarios);
+      }
+    })
+    .on('end', () => {
+      CONFIG.scenarios = scenarios;
+      gutil.log(CONFIG);
+    });
 });

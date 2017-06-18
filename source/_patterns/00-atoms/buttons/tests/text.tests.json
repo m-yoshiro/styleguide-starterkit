@@ -1,7 +1,13 @@
 {
   "scenarios": [
     {
-      "label": ".text"
+      "label": "text",
+      "url": "http://localhost:3000/patterns/00-atoms-buttons-button/00-atoms-buttons-button.html",
+      "selectors": [
+        ".text"
+      ],
+      "delay": 500,
+      "misMatchThreshold" : 0.1
     }
   ]
 }

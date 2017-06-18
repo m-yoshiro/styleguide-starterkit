@@ -4,7 +4,7 @@ ie:
     - DS_Store
     - less
     - scss
-    - tests.js
+    - tests.json
 id:
     - stylesheets
     - scss

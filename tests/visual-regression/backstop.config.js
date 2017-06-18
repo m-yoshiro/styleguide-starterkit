@@ -1,5 +1,5 @@
 const BASE_CONFIG = {
-  "id": "backstop_base_config",
+  "id": "backstop",
   "viewports": [
     {
       "name": "phone",
@@ -28,7 +28,7 @@ const BASE_CONFIG = {
   "casperFlags": [],
   "engine": "phantomjs",
   "report": ["browser"],
-  "debug": false
+  "debug": true
 };
 
 module.exports = options => {

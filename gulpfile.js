@@ -22,7 +22,7 @@ const cssnano = require('cssnano');
 const browserSync = require('browser-sync').create();
 const fs = require('fs');
 const path = require('path');
-// const backstop = require('backstopjs');
+const backstopjs = require('backstopjs');
 
 // Config
 //
@@ -109,6 +109,6 @@ gulp.task('visual-regrresion:ref', () => {
     })
     .on('end', () => {
       CONFIG.scenarios = scenarios;
-      gutil.log(CONFIG);
+      backstopjs('reference', { config: CONFIG });
     });
 });

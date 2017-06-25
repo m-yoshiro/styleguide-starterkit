@@ -2,8 +2,10 @@
 export/*
 public/*
 source/styleguide/*
+source/stylesheets/style.css
 vendor/*
 node_modules/*
+.tmp/*
 /tests/visual-regression/html_report/*
 !/tests/visual-regression/html_report/.gitkeep
 /tests/visual-regression/bitmaps_test/*

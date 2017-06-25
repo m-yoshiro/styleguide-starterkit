@@ -6,7 +6,6 @@ ie:
     - scss
     - tests.json
 id:
-    - stylesheets
     - scss
     - tests
     - .svn
@@ -41,3 +40,6 @@ twigFilterExt: filter.php
 twigFunctionExt: function.php
 twigTagExt: tag.php
 twigTestExt: test.php
+plugins:
+    reload:
+        enabled: true

@@ -1,3 +1,5 @@
+'use strict';
+
 /* ==========================
 
   Styleguide Build Tasks
@@ -5,10 +7,15 @@
   - Config
   - Stylesheets
   - Pattern lab
+  - Watch
   - Tests
+  - Development
 
   ========================= */
 
+const fs = require('fs');
+const path = require('path');
+const { exec } = require('child_process');
 const gulp = require('gulp');
 const shell = require('gulp-shell');
 const gutil = require('gulp-util');
@@ -19,21 +26,26 @@ const stylelint = require('gulp-stylelint');
 const reporter = require('postcss-reporter');
 const autoprefixer = require('autoprefixer');
 const cssnano = require('cssnano');
-const browserSync = require('browser-sync').create();
-const fs = require('fs');
-const path = require('path');
 const backstopjs = require('backstopjs');
+const runSequence = require('run-sequence');
 
+
+// -------------------
 // Config
-//
 
 const PATHS = {
   src: `${__dirname}/source`,
   dist: `${__dirname}/public`,
+  tmp: `${__dirname}/.tmp`
 };
 
+const options = {
+  env: process.env.NODE_ENV || 'development'
+};
+
+
+// -------------------
 // Stylesheets
-//
 
 gulp.task('styles', ['lint:styles'], () => {
 
@@ -47,76 +59,128 @@ gulp.task('styles', ['lint:styles'], () => {
     reporter(),
   ];
 
-  return gulp.src(`${PATHS.src}/stylesheets/**/*.scss`)
+  return gulp.src(`${PATHS.src}/stylesheets/scss/**/*.scss`)
     .pipe(sourcemaps.init())
     .pipe(sass().on('error', sass.logError))
     .pipe(postcss(POSTCSS_PLUGINS))
     .pipe(sourcemaps.write())
-    .pipe(gulp.dest(`${PATHS.dist}/css/`))
-    .pipe(browserSync.reload({ stream: true }));
+    .pipe(gulp.dest(`${PATHS.tmp}/stylesheets`));
 });
 
 gulp.task('lint:styles', () => {
-  return gulp.src(`${PATHS.src}/stylesheets/**/*.scss`)
+  return gulp.src(`${PATHS.src}/**/*.scss`)
     .pipe(stylelint({
       reporters: [{ formatter: 'string', console: true }],
     }));
 });
 
+gulp.task('copy:styles', () => {
+  let stream;
+  const delay = options.env === 'production' ? 0 : 1000;
+
+  setTimeout(() => {
+    gutil.log(`Starting '${gutil.colors.cyan('copy:style')}' set delay: ${gutil.colors.magenta(delay)} ms`);
+    stream = gulp.src(`${PATHS.tmp}/stylesheets/*.css`)
+      .pipe(gulp.dest(`${PATHS.src}/stylesheets`));
+    gutil.log(`Finished '${gutil.colors.cyan('copy:style')}'`);
+  }, delay);
+
+  return stream;
+});
+
+gulp.task('styles:dev', (cb) => {
+  runSequence('styles', 'copy:styles', cb);
+});
+
+
+// -------------------
 // Pattern Lab
-//
 
-gulp.task('watch:patternlab', shell.task([
-  'php core/console --watch'
-]));
+gulp.task('serve:patternlab', function (cb) {
+  const server = exec('php core/console --server --with-watch', cb);
 
+  server.stdout.on('data', (data) => {
+    const url = /https?:\/\/[\w-]+:+\d{4}?/gi;
 
-// BrowserSync
-//
-
-gulp.task('browserSync-reload', () => {
-  browserSync.reload();
-});
-
-gulp.task('browserSync', () => {
-  browserSync.init({
-    server: './public'
-  });
-});
-
-// Watch
-//
-
-gulp.task('watch', ['styles', 'watch:patternlab', 'browserSync'], () => {
-  gulp.watch(`${PATHS.src}/_patterns`, ['browserSync-reload']);
-  gulp.watch(`${PATHS.src}/stylesheets`, ['styles']);
-});
-
-// Tests
-//
-
-let CONFIG = require('./tests/visual-regression/backstop.config.js')();
-
-function setupBackstopjs(cb) {
-  let scenarios = [];
-
-  return gulp.src(`${PATHS.src}/**/*.tests.json`)
-  .on('data', (file) => {
-    const unitConfig = JSON.parse(fs.readFileSync(file.path));
-    if(Array.isArray(unitConfig.scenarios) ) {
-      scenarios = scenarios.concat(unitConfig.scenarios);
+    if (url.test(data.toString())) {
+      gutil.log(gutil.colors.cyan(data.toString()));
+    } else {
+      gutil.log(data.toString());
     }
-  })
-  .on('end', () => {
-    CONFIG.scenarios = scenarios;
-    if (cb) cb();
   });
+
+  server.stderr.on('data', (data) => {
+    process.stdout.write(data.toString());
+  });
+
+  server.on('close', (code) => {
+    if (code === 0) {
+      cb();
+    }
+    else {
+      console.log(`close: ${code}`);
+    }
+  });
+});
+
+
+// -------------------
+// Watch
+
+gulp.task('watch', () => {
+  gulp.watch(`${PATHS.src}/**/*.scss`, ['styles:dev']);
+});
+
+
+// -------------------
+// Tests
+
+let BACKSTOP_CONFIG = require('./tests/visual-regression/backstop.config.js')();
+
+// Getting **.tests.json files from component directories.
+function setupBackstopjs(cb) {
+  gutil.log(`Starting '${gutil.colors.cyan('Setup Backstopjs:')}'...`);
+
+  if (!Array.isArray(BACKSTOP_CONFIG.scenarios)) {
+    BACKSTOP_CONFIG.scenarios = [];
+  }
+
+  gutil.log(`Starting ${gutil.colors.cyan('Setup Backstopjs:')}...`);
+  return gulp.src(`${PATHS.src}/**/*.tests.json`)
+    .on('data', (file) => {
+      gutil.log(`'${file.path}'`);
+      const unitConfig = JSON.parse(fs.readFileSync(file.path));
+      if(Array.isArray(unitConfig.scenarios) ) {
+        BACKSTOP_CONFIG.scenarios = BACKSTOP_CONFIG.scenarios.concat(unitConfig.scenarios);
+      }
+    })
+    .on('end', () => {
+      if (cb) cb();
+    });
 }
 
 gulp.task('visual-regrresion:ref', () => {
-  return setupBackstopjs(() => backstopjs('reference', { config: CONFIG }));
+  return setupBackstopjs(() => backstopjs('reference', { config: BACKSTOP_CONFIG }));
 });
 
 gulp.task('visual-regrresion:test', () => {
-  return setupBackstopjs(() => backstopjs('test', { config: CONFIG }));
+  return setupBackstopjs(() => backstopjs('test', {
+    config: BACKSTOP_CONFIG,
+    filter: gutil.env.filter || null
+  }));
+});
+
+gulp.task('visual-regrresion:approve', () => {
+  return setupBackstopjs(() => backstopjs('approve', { config: BACKSTOP_CONFIG }));
+});
+
+// -------------------
+// Development
+
+gulp.task('default', ['styles'], () => {
+  runSequence (
+    'copy:styles',
+    'serve:patternlab',
+    'watch'
+  );
 });

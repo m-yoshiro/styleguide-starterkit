@@ -1,0 +1,24 @@
+.c-btn {
+  color: #fff;
+  font-size: 1rem;
+  background-color: #444;
+  border: 2px solid transparent;
+
+  &:hover {
+    background-color: lighten(#444, 20%);
+    cursor: pointer;
+  }
+
+  &:disabled {
+    color: #ccc;
+    background-color: #aaa;
+  }
+}
+
+.c-btn--primary {
+  background-color: lighten(#194da6, 20%);
+
+  &:hover {
+    background-color: lighten(#444, 20%);
+  }
+}

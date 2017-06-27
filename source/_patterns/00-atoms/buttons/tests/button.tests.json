@@ -2,14 +2,25 @@
   "scenarios": [
     {
       "label": "button",
-      "url": "http://localhost:3000/patterns/00-atoms-buttons/index.html",
+      "url": "http://localhost:8080/patterns/00-atoms-buttons/index.html",
       "selectors": [
         ".c-btn",
         ".c-btn:disabled",
-        ".c-btn.c-btn--primary"
+        ".c-btn--primary:not(:disabled)"
       ],
       "delay": 500,
       "misMatchThreshold" : 0.1
+    },
+    {
+      "label": "button:hovered",
+      "url": "http://localhost:8080/patterns/00-atoms-buttons/index.html",
+      "selectors": [
+        ".c-btn"
+      ],
+      "onReadyScript": "mouseover.js",
+      "delay": 500,
+      "misMatchThreshold" : 0.1
     }
+
   ]
 }

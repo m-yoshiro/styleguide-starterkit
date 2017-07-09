@@ -1,0 +1,22 @@
+{
+  "name": "select",
+  "id": "select",
+  "multiple": false,
+  "options": [
+    {
+      "value": "option:1",
+      "text": "option:1",
+      "selected": true
+    },
+    {
+      "value": "option:1",
+      "text": "option:1",
+      "selected": false
+    },
+    {
+      "value": "option:1",
+      "text": "option:1",
+      "selected": false
+    }
+  ]
+}

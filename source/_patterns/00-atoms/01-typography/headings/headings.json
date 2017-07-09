@@ -1,0 +1,19 @@
+{
+  "headings": [
+    {
+      "hdRank": 1,
+      "hdText": "Heading: Main",
+      "styleModifier": "main"
+    },
+    {
+      "hdRank": 2,
+      "hdText": "Heading: Secondary",
+      "styleModifier": "secondary"
+    },
+    {
+      "hdRank": 3,
+      "hdText": "Heading: paragraph",
+      "styleModifier": "paragraph"
+    }
+  ]
+}

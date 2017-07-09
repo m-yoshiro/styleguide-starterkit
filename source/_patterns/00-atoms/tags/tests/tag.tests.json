@@ -1,0 +1,13 @@
+{
+  "scenarios": [
+    {
+      "label": "button",
+      "url": "http://localhost:8080/patterns/00-atoms-tags/index.html",
+      "selectors": [
+        ".tag"
+      ],
+      "delay": 500,
+      "misMatchThreshold" : 0.1
+    }
+  ]
+}

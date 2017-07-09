@@ -1,0 +1,5 @@
+<select name="" id="{{ id }}" {{ multiple ? "multiple" }}>
+  {% for option in options %}
+    <option value="{{ option.value }}" {{ option.selected ? "selected" }}>{{ option.text }}</option>
+  {% endfor %}
+</select>

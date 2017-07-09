@@ -1,0 +1,14 @@
+{
+  "links": [
+    {
+      "linkText": "Normal",
+      "href": "javascript:void(0)",
+      "state": "normal"
+    },
+    {
+      "linkText": "hovered",
+      "href": "javascript:void(0)",
+      "state": "hovered"
+    }
+  ]
+}

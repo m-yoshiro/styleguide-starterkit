@@ -14,6 +14,11 @@
       "hdRank": 3,
       "hdText": "Heading: paragraph",
       "styleModifier": "paragraph"
+    },
+    {
+      "hdRank": 4,
+      "hdText": "Heading: paragraph",
+      "styleModifier": "paragraph"
     }
   ]
 }

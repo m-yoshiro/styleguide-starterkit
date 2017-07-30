@@ -1,0 +1,5 @@
+<ol class="pagination">
+  {% for url in pagination %}
+    <li><a href="{{ url }}">{{ loop.index }}</a></li>
+  {% endfor %}
+</ol>

@@ -1,4 +1,5 @@
 {
   "placeholder": "Input text",
-  "value": null
+  "value": null,
+  "id": "id"
 }

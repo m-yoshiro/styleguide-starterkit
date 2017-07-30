@@ -1,7 +1,11 @@
 $font-size--root: 16px;
 
 $font-sizes: (
-  body: 16px,
-  context: 15px,
-  small: 13px,
+  body: 16,
+  context: 15,
+  medium: 14,
+  small: 13,
 );
+
+$font-weight--normal: 300;
+$font-weight--bold: 600;
